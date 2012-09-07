@@ -36,28 +36,16 @@ CC	 = $(cc)
 LINKLIB	 = $(implib) /nologo /out:
 CFLAGS	 = $(cflags) $(cvarsmt) $(cdebug) /I$(INCLUDEDEST) /I. /I.. /I$(SDK4MEMORY_POOL_SYSTEM)\code $(OPEN_DYLAN_C_FLAGS) /DOPEN_DYLAN_PLATFORM_WINDOWS /DGC_USE_MPS /DOPEN_DYLAN_ARCH_X86
 HEAPOBJS = heap-display.obj heap-utils.obj heap-trail.obj heap-order1.obj heap-order2.obj heap-table.obj
-OBJS	 = collector.obj break.obj $(HEAPOBJS) harp-support\x86-windows\runtime.obj windows-threads-primitives.obj windows-spy-interfaces.obj
+OBJS	 = collector.obj break.obj $(HEAPOBJS) harp-support\x86-windows\runtime.obj windows-threads-primitives.obj windows-spy-interfaces.obj mps-dylan.obj
 LIBFILE	 = pentium-run-time.lib
 USEROBJ	 = harp-support\x86-windows\dylan-support.obj
 USERLIB	 = dylan-support.lib
 MINCRT   = minvcrt.lib
 
 RUNTIMELIBDEST	 = $(LIBDEST)\pentium-run-time.lib
-MMDWDEST	 = $(LIBDEST)\mmdw.lib
-PLINTHDEST	 = $(LIBDEST)\mpsplinth.lib
 MINCRTDEST	 = $(LIBDEST)\minvcrt.lib
 
-RELEASEMMDW     = $(SDK4MEMORY_POOL_SYSTEM)\code\w3i3mv\hi\mmdw.lib
-RELEASEPLINTH	  = $(SDK4MEMORY_POOL_SYSTEM)\code\w3i3mv\hi\mpsplan.lib
-
-DEBUGMMDW        = debug-mmdw.lib
-DEBUGPLINTH	 = debug-mpsplan.lib
-
-SYMBOLICMMDW     = symbolic-mmdw.lib
-SYMBOLICPLINTH	 = mpsplan.lib
-
 PLINTHOBJS       = plinth.obj mpsiowin32.obj
-DYLANPLINTH      = dylan-plinth.lib
 
 !if defined(fullcrt)
 $(MINCRT):
@@ -70,11 +58,8 @@ rtsyms.obj: rtsyms.s
 	as -n -o rtsyms.obj rtsyms.s
 !endif
 
-$(DYLANPLINTH): $(PLINTHOBJS)
-	$(LINKLIB)$(DYLANPLINTH) $(PLINTHOBJS)
-
-$(LIBFILE): $(OBJS)
-	$(LINKLIB)$(LIBFILE) $(OBJS)
+$(LIBFILE): $(OBJS) $(PLINTHOBJS)
+	$(LINKLIB)$(LIBFILE) $(OBJS) $(PLINTHOBJS)
 
 $(USERLIB): $(USEROBJ)
 	$(LINKLIB)$(USERLIB) $(USEROBJ)
@@ -100,25 +85,6 @@ install-runtime: $(LIBFILE)
 	pushd $(LIBDEST) & (del /q /f $(LIBFILE)) & popd
 	copy $(LIBFILE) $(LIBDEST)
 
-install-dylan-plinth: $(DYLANPLINTH)
-  echo Building pentium run time: install-dylan-plinth
-	if exist $(PLINTHDEST) del /q /f $(PLINTHDEST)
-	copy $(DYLANPLINTH) $(PLINTHDEST)
-
-install-ansi-plinth: $(SYMBOLICPLINTH)
-	echo Building pentium run time: install-ansi-plinth
-	if exist $(PLINTHDEST) del /q /f $(PLINTHDEST)
-	copy $(SYMBOLICPLINTH) $(PLINTHDEST)
-
-install-debug-ansi-plinth: $(DEBUGPLINTH)
-  echo Building pentium run time: install-debug-ansi-plinth
-	if exist $(PLINTHDEST) del /q /f $(PLINTHDEST)
-	copy $(DEBUGPLINTH) $(PLINTHDEST)
-
-install-plinth: install-dylan-plinth
-  echo Building pentium run time: install-plinth
-
-
 !if defined(fullcrt)
 install-mincrt:
    echo Building pentium run time: install-mincrt (fullcrt)
@@ -129,36 +95,9 @@ install-mincrt: $(MINCRT)
 	copy $(MINCRT) $(MINCRTDEST)
 !endif
 
-install-mmdw:
-  echo Building pentium run time: install-mmdw
-	if exist $(MMDWDEST) del /q /f $(MMDWDEST)
-	if not exist $(RELEASEMMDW) pushd $(SDK4MEMORY_POOL_SYSTEM)\code \
-	& $(MAKE) /k /f w3i3mv.nmk mmdw.lib > $(BUILD_LOGS)\make-mmdw.log \
-	& popd
-  copy $(RELEASEMMDW) $(MMDWDEST)
+install-common-libs: ensure-dirs install-userlib install-mincrt
 
-install-symbolic-mmdw: $(SYMBOLICMMDW)
-  echo Building pentium run time: install-symbolic-mmdw
-	if exist $(MMDWDEST) del /q /f $(MMDWDEST)
-	copy $(SYMBOLICMMDW) $(MMDWDEST)
-
-install-debug-mmdw: $(DEBUGMMDW)
-  echo Building pentium run time: install-debug-mmdw
-	if exist $(MMDWDEST) del /q /f $(MMDWDEST)
-	copy $(DEBUGMMDW) $(MMDWDEST)
-
-
-install-common-libs: ensure-dirs install-plinth install-userlib install-mincrt
-
-
-install-stripped: ensure-dirs install-mmdw install-runtime install-common-libs
-
-install-debug: ensure-dirs install-debug-mmdw install-runtime install-common-libs
-
-install-symbolic: ensure-dirs install-symbolic-mmdw install-runtime install-common-libs
-
-
-install: ensure-dirs install-stripped install-build
+install: ensure-dirs install-runtime install-common-libs install-build
 
 # Only delete the products that should be built by this makefile.
 # (The files runtime.obj & dylan-support.obj are checked out from HOPE)
@@ -166,5 +105,5 @@ clean:
 	pushd . & (del /f /q *collector.obj break.obj $(HEAPOBJS) windows-threads-primitives.obj windows-spy-interfaces.obj) & popd
         pushd . & (del /f /q *pentium-run-time.lib $(USERLIB)) & popd
         pushd . & (del /f /q $(MINCRT) mincrt.def) & popd
-        pushd . & (del /f /q $(DYLANPLINTH) $(PLINTHOBJS)) & popd
+        pushd . & (del /f /q $(PLINTHOBJS)) & popd
 
