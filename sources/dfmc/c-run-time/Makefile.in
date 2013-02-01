@@ -19,6 +19,7 @@ OBJDIR          = obj-$(OPEN_DYLAN_PLATFORM_NAME)
 
 CC = @CC@
 AR = ar -rcs
+BASE_CFLAGS = -W -Wall -O2 -g -fPIC -fno-strict-aliasing
 
 ifeq ($(OPEN_DYLAN_PLATFORM_NAME),x86-darwin)
   PLATFORM_CFLAGS=-arch i386 -D_REENTRANT=1 \
@@ -40,8 +41,13 @@ ifeq ($(OPEN_DYLAN_PLATFORM_NAME),x86_64-linux)
   PLATFORM_CFLAGS=-DGC_LINUX_THREADS=1 -D_REENTRANT=1 \
     -DOPEN_DYLAN_PLATFORM_LINUX -DOPEN_DYLAN_PLATFORM_UNIX
 endif
+ifeq ($(OPEN_DYLAN_PLATFORM_NAME),emscripten)
+  PLATFORM_CFLAGS=-DOPEN_DYLAN_PLATFORM_EMSCRIPTEN -DOPEN_DYLAN_PLATFORM_UNIX
+  CC=emcc
+  BASE_CFLAGS=
+endif
 
-CFLAGS          = -W -Wall -O2 -g -fPIC -fno-strict-aliasing \
+CFLAGS          = $(BASE_CFLAGS) \
                   $(PLATFORM_CFLAGS) -I$(srcdir) \
                   $(GC_CFLAGS)
 

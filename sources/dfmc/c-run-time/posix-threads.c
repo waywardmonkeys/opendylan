@@ -24,7 +24,11 @@
 
 #include <limits.h>
 
+#ifdef OPEN_DYLAN_PLATFORM_EMSCRIPTEN
+#include <gc.h>
+#else
 #include <gc/gc.h>
+#endif
 
 #include <sys/time.h>
 

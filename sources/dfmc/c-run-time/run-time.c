@@ -6,7 +6,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
+#ifdef OPEN_DYLAN_PLATFORM_EMSCRIPTEN
+#include <gc.h>
+#else
 #include <gc/gc.h>
+#endif
 
 #ifdef OPEN_DYLAN_PLATFORM_UNIX
 #include <signal.h>
@@ -4648,7 +4653,11 @@ DSINT primitive_set_errno (DSINT code) {
 }
 
 DCBSTR primitive_errstr (DSINT no) {
-  return(sys_errlist[no]);
+# ifdef OPEN_DYLAN_PLATFORM_EMSCRIPTEN
+  return _sys_errlist[no];
+# else
+  return sys_errlist[no];
+#endif
 }
 
 /* TERMINAL */
