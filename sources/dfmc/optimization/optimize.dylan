@@ -4,7 +4,6 @@ Copyright:    Original Code is Copyright (c) 1995-2004 Functional Objects, Inc.
 License:      See License.txt in this distribution for details.
 Warranty:     Distributed WITHOUT WARRANTY OF ANY KIND
 
-/*
 define compilation-pass analyze-environments,
   visit: functions,
   mandatory?: #t;
@@ -63,8 +62,6 @@ define compilation-pass delete-useless-environments,
   optimization: low,
   after: delete-useless-computations,
   before: analyze-environments;
-
-*/
 
 define variable *trace-optimizations* :: false-or(<&lambda>) = #f;
 
