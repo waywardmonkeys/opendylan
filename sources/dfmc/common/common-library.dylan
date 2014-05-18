@@ -158,34 +158,33 @@ define module dfmc-common
 
     run-compilation-passes,
 
-    word-size;
+    word-size,
 
-    // \compilation-pass-definer,
-    // define-compilation-pass!,
-    // optimization-default-hack, visit-default-hack,
+    \compilation-pass-definer,
+    define-compilation-pass!,
+    visit-default-hack,
 
-    // <compilation-pass>,
-    // lookup-pass,
-    // pass-function, pass-function-setter,
-    // optimization-level, optimization-level-setter,
-    // visiting-policy, visiting-policy-setter,
-    // all-triggered-passes,
-    // disabled?, disabled?-setter,
-    // print-before?, print-before?-setter,
-    // print-after?, print-after?-setter,
-    // check-before?, check-before?-setter,
-    // check-after?, check-after?-setter,
-    // include-back-ends, include-back-ends-setter,
-    // exclude-back-ends, exclude-back-ends-setter,
+    <compilation-pass>,
+    lookup-pass,
+    pass-function, pass-function-setter,
+    visiting-policy, visiting-policy-setter,
+    all-triggered-passes,
+    disabled?, disabled?-setter,
+    print-before?, print-before?-setter,
+    print-after?, print-after?-setter,
+    check-before?, check-before?-setter,
+    check-after?, check-after?-setter,
+    include-back-ends, include-back-ends-setter,
+    exclude-back-ends, exclude-back-ends-setter,
 
-    // *passes*,
-    // pass-ordering,
+    *passes*,
+    pass-ordering,
 
-    // <compilation-queue>,
-    // push-pass!,
-    // pop-pass!,
+    <compilation-queue>,
+    push-pass!,
+    pop-pass!,
 
-    // topological-sort
+    topological-sort;
 
   export
     describe,
