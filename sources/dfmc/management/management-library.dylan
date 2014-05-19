@@ -61,12 +61,12 @@ define module dfmc-management
 
     *retract-models-after-compilation?*,
     *retract-types-after-compilation?*,
-    // trace-pass,
-    // untrace-pass,
-    // untrace-passes,
-    // enable-pass,
-    // disable-pass,
-    // *trace-compilation-passes*,
+    trace-pass,
+    untrace-pass,
+    untrace-passes,
+    enable-pass,
+    disable-pass,
+    *trace-compilation-passes*,
     *progress-stream*, // remove uses in other libs
     \with-progress-reports, // this is for use by the project manager
     \with-library-progress, // this is for use by the project manager
@@ -91,8 +91,10 @@ define module dfmc-management
     *dfmc-profile-allocation?*,
     *combine-object-files?*,
     
-    *demand-load-library-only?*
+    *demand-load-library-only?*,
+
+    *always-check-after?*,
+    *always-check-before?*
+
     ;
-    // *always-check-after?*,
-    // *always-check-before?*
 end module;

@@ -6,44 +6,42 @@ Copyright:    Original Code is Copyright (c) 1995-2004 Functional Objects, Inc.
 License:      See License.txt in this distribution for details.
 Warranty:     Distributed WITHOUT WARRANTY OF ANY KIND
 
-/*
 define thread variable *trace-compilation-passes* = #f;
 define thread variable *reoptimize-after-changes* = #t;
 
 define thread variable *always-check-after?* = #f;
 define thread variable *always-check-before?* = #f;
-*/
 
 define sealed sideways method run-compilation-passes (code) => code;
-  // if (#t)
+  let run-passes? = environment-variable("OPEN_DYLAN_RUN_PASSES");
+  if (~run-passes?)
     really-run-compilation-passes(code);
-  //  else
-  //  unless (lambda-optimized?(code))
-  //    with-simple-abort-retry-restart
-  //	("Abort all analysis passes and continue.", 
-  //	 "Restart all analysis passes.")
-  //      let queue = make(<compilation-queue>);
-  //      for (pass in reverse(*passes*.pass-ordering))
-  //	push-pass!(queue, pass);
-  //      end for;
-  //      with-dependent-context ($compilation of model-creator(code))
-  //	  local method loop () => ();
-  //		  let pass = pop-pass!(queue);
-  //		  if (pass)
-  //		    run-pass(code, pass, queue);
-  //		    loop();
-  //		  end if;
-  //	  end method loop;
-  //	  loop();
-  //	  lambda-optimized?(code) := #t;
-  //      end with-dependent-context;
-  //    end with-simple-abort-retry-restart;
-  //  end;
-  //  end if;
+  else
+    unless (lambda-optimized?(code))
+      with-simple-abort-retry-restart
+          ("Abort all analysis passes and continue.",
+           "Restart all analysis passes.")
+        let queue = make(<compilation-queue>);
+        for (pass in reverse(*passes*.pass-ordering))
+          push-pass!(queue, pass);
+        end for;
+        with-dependent-context ($compilation of model-creator(code))
+            local method loop () => ();
+                    let pass = pop-pass!(queue);
+                    if (pass)
+                      run-pass(code, pass, queue);
+                      loop();
+                    end if;
+            end method loop;
+            loop();
+            lambda-optimized?(code) := #t;
+        end with-dependent-context;
+      end with-simple-abort-retry-restart;
+    end;
+  end if;
   code
 end method run-compilation-passes;
 
-/* TODO: OBSOLETE?
 define method run-pass
     (code, pass :: <compilation-pass>, queue :: <compilation-queue>) => code;
   with-simple-abort-retry-restart
@@ -76,10 +74,8 @@ define method run-pass
   end with-simple-abort-retry-restart;
   code
 end method run-pass;
-*/
 
 
-/*
 /// traversal mechanisms
 
 define method traverse
@@ -105,14 +101,14 @@ end method traverse;
 define method traverse (code :: <&lambda>, function, visit == #"computations")
  => (changed? :: <boolean>);
   local method visit-computations (f :: <&lambda>)
-	  let changed? = #f;
-	  for-computations (c in f)
-	    if (function(c))
-	      changed? := #t;
-	    end if;
-	  end for-computations;
+          let changed? = #f;
+          for-computations (c in f)
+            if (function(c))
+              changed? := #t;
+            end if;
+          end for-computations;
           changed?
-	end method visit-computations;
+        end method visit-computations;
   traverse(code, visit-computations, #"functions")
 end method traverse;
 
@@ -171,4 +167,3 @@ end method enable-pass;
 define method enable-pass (name)
   enable-pass(as(<compilation-pass>, name))
 end method enable-pass;
-*/
