@@ -37,8 +37,8 @@ end method ensure;
 define method ensure-invariants (f :: <&lambda>, #key before, after) => ();
   dynamic-bind (*checker-message* =
 		  case
-		    before => format-to-string("before %s: ", before.as-lowercase);
-		    after  => format-to-string("after %s: ",  after.as-lowercase);
+		    before => format-to-string("before %s: ", as(<string>, before).as-lowercase);
+		    after  => format-to-string("after %s: ",  as(<string>, after).as-lowercase);
 		      otherwise #f
 		  end case)
     ensure-invariants*(f);
