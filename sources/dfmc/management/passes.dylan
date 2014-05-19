@@ -51,7 +51,7 @@ define method run-pass
       format-out("// before %s\n%=\n", pass.name, code);
     end if;
     if (pass.check-before? | *always-check-before?*)
-      ensure-invariants(code, before: pass.name);
+      // ensure-invariants(code, before: pass.name);
     end if;
     if (*trace-compilation-passes*)
       format-out("// running compilation pass %s\n", pass.name);
@@ -69,7 +69,7 @@ define method run-pass
       format-out("// after %s\n%=\n", pass.name, code);
     end if;
     if (pass.check-after? | *always-check-after?*)
-      ensure-invariants(code, after: pass.name);
+      // ensure-invariants(code, after: pass.name);
     end if;
   end with-simple-abort-retry-restart;
   code

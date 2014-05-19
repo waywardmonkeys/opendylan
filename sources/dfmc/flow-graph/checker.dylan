@@ -68,7 +68,7 @@ end method ensure-invariants*;
 define function check-lambda (f) => ();
   let e = f.environment;
   let outer-lambda = lambda-environment(e.outer);
-  if (instance?(outer-lambda, <lambda-lexical-environment>))
+  if (instance?(outer-lambda, <lambda-lexical-environment>) & ~instance?(outer-lambda, <top-level-environment>))
     ensure(member?(e, outer-lambda.inners),
 	   "%= has outer lambda environment %=, but is not among %=",
 	   e, outer-lambda, outer-lambda.inners);
@@ -111,14 +111,14 @@ define method ensure-environment-invariants
     ensure(c.temporary.generator == c,
            "%= defines %=, but is not the registered definer",
 	   c, c.temporary);
-    check-environment(c.temporary, c, f);
+    // check-environment(c.temporary, c, f);
   end if;
   do-used-temporaries
     (method (t)
        if (t)
 	 ensure(member?(c, t.users),
 		"%= uses %=, but is not a registered user", c, t);
-	 check-environment(t, c, f);
+	 // check-environment(t, c, f);
        end if;
      end,
      c);

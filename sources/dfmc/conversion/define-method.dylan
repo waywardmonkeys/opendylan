@@ -471,7 +471,7 @@ end method;
 
 define method ensure-method-optimized (f :: <&method>)
   maybe-compute-and-install-method-dfm(f) ;
-  run-compilation-passes(f);
+  // run-compilation-passes(f);
 end method;
 
 define method ensure-method-model (f :: <&method>)
