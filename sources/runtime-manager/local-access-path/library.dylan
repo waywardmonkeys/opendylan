@@ -16,4 +16,5 @@ define library local-access-path
   use system;
   use c-ffi;
   use access-path;
+  use debugger-nub;
 end library;

@@ -28,4 +28,5 @@ define module access-path-implementation
 
   use access-path;
   use access-path-nub;
+  use debugger-nub;
 end module;

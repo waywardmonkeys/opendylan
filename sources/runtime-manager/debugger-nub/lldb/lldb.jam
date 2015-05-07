@@ -1,0 +1,5 @@
+{
+  local _dll = [ FDLLName $(image) ] ;
+  LINKLIBS on $(_dll) += -L/Users/bruce/Development/build-llvm/lib -llldb -lc++ -lc++abi ;
+  C++FLAGS += -std=c++14 -I/Users/bruce/Development/llvm/tools/lldb/include ;
+}
