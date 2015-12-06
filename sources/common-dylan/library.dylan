@@ -313,3 +313,128 @@ define module common-dylan-internals
   use simple-timers;
   use simple-format;
 end module common-dylan-internals;
+
+define module streams-internals
+  use streams-protocol;
+  use common-dylan;
+  use locators-protocol;
+  use dylan-extensions;
+  use dylan-direct-c-ffi;
+  use byte-vector;
+  use machine-words;
+  use threads;
+
+  // Basic stream classes
+  export <typed-stream>,
+         <general-typed-stream>,
+         <byte-element-stream>,
+         <byte-char-element-stream>;
+
+  // Efficient querying direction
+  export readable?, writable?, closed?, read-only?, write-only?, read-write?;
+
+  // Conditions
+  export end-of-stream-value,
+         stream-error-requested-position,
+         stream-error-size-of-stream,
+         ensure-readable, ensure-writable;
+
+  // Querying streams
+  export stream-direction, stream-console?;
+
+  // Positionable streams
+  export current-position, current-position-setter,
+         initial-position,
+         final-position;
+
+  // Buffers and buffered streams
+  export *multi-buffer-bytes*,
+         <power-of-two-buffer>,
+         <single-buffered-stream>,
+         <double-buffered-stream>,
+         make-<power-of-two-buffer>,
+         buffer-off-page-bits,
+         buffer-on-page-bits,
+         buffer-owning-stream, buffer-owning-stream-setter,
+         buffer-use-count, buffer-use-count-setter,
+         ensure-input-buffer, ensure-output-buffer,
+         coerce-to-element,
+         coerce-from-element,
+         coerce-to-sequence,
+         coerce-from-sequence,
+         round-to-power-of-two,
+         stream-input-buffer,  stream-input-buffer-setter,
+         stream-output-buffer, stream-output-buffer-setter,
+         stream-shared-buffer, stream-shared-buffer-setter,
+         actual-stream-input-buffer, actual-stream-input-buffer-setter,
+         actual-stream-output-buffer, actual-stream-output-buffer-setter;
+
+  // File streams
+  export <file-stream>,
+         <byte-file-stream>,
+         <external-file-accessor>,
+         type-for-file-stream,
+         stream-locator,
+         writable-file-stream-position-setter,
+         <general-file-stream>,
+         <byte-char-file-stream>;
+
+  // Multi-buffered streams
+  export <buffer-vector>,
+         <multi-buffered-stream>,
+         multi-buffered-stream-position-setter,
+         write-4-aligned-bytes-from-word,
+         read-4-aligned-bytes-as-word,
+         write-4-aligned-bytes, write-8-aligned-bytes,
+         read-4-aligned-bytes, read-8-aligned-bytes,
+         multi-buffer-working-set,
+         multi-buffer-reads,
+         multi-buffer-bytes,
+         multi-buffer-total-working-set,
+         multi-buffer-total-reads,
+         multi-buffer-total-bytes,
+         <general-multi-buffered-stream>,
+         <byte-multi-buffered-stream>,
+         <byte-char-multi-buffered-stream>;
+
+  // Sequence streams
+  export clear-contents,
+         newline-sequence,
+         stream-limit-setter,
+         stream-sequence;
+
+  // Stream access paths
+  export <external-stream-accessor>,
+         <external-stream>,
+         platform-accessor-class,
+         new-accessor,
+         accessor, accessor-setter,
+         accessor-open,
+         accessor-open?,
+         accessor-close,
+         accessor-at-end?,
+         accessor-at-end?-setter,
+         accessor-console?,
+         accessor-size,
+         accessor-size-setter,
+         accessor-positionable?,
+         accessor-position,
+         accessor-position-setter,
+         accessor-force-output,
+         accessor-wait-for-completion,
+         accessor-newline-sequence,
+         accessor-preferred-buffer-size,
+         accessor-fd,
+         accessor-synchronize,
+         accessor-read-into!,
+         accessor-write-from;
+
+  // "High performance"
+  export \copy-down-stream-definer,
+         \copy-down-buffered-stream-definer,
+         read-skip,
+         write-fill;
+
+  // File accessors
+  create <native-file-accessor>;
+end module streams-internals;

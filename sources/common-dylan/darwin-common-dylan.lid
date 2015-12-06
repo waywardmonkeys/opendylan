@@ -27,6 +27,15 @@ Files: library
        machine-words/signal-overflow
        machine-words/double
        machine-words/unsigned-double
+       io-core/native-buffer
+       io-core/buffer
+       io-core/defs
+       io-core/stream
+       io-core/buffered-stream
+       io-core/external-stream
+       io-core/file-stream
+       io-core/typed-stream
+       io-core/unix-standard-io
 C-Source-Files: darwin-common-extensions-helper.c
                 timer_helpers.c
 Copyright:    Original Code is Copyright (c) 1995-2004 Functional Objects, Inc.
