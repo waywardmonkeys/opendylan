@@ -25,6 +25,8 @@ define library common-dylan
     simple-io,
     byte-vector,
     transcendentals;
+
+  export streams-internals;
 end library common-dylan;
 
 define module simple-profiling
@@ -339,6 +341,26 @@ define module streams-internals
          stream-error-size-of-stream,
          ensure-readable, ensure-writable;
 
+  // Reading from streams
+  export read-character,
+         read-text,
+         read-text-into!;
+
+  // Writing to streams
+  export write-text;
+
+  // Convenience functions
+  export read-to,
+         read-through,
+         read-to-end,
+         skip-through;
+
+  // Line-oriented functions
+  export read-line,
+         read-line-into!,
+         write-line,
+         new-line;
+
   // Querying streams
   export stream-direction, stream-console?;
 
@@ -346,6 +368,26 @@ define module streams-internals
   export current-position, current-position-setter,
          initial-position,
          final-position;
+
+  // Locking streams
+  export \with-stream-locked,
+         stream-lock, stream-lock-setter,
+         // obsolete but still used, actually these don't really work but
+         // code still apparently depends on them
+         lock-stream, unlock-stream, stream-locked?;
+
+  // Buffered streams
+  export <buffered-stream>,
+         get-input-buffer,     do-get-input-buffer,
+         release-input-buffer, do-release-input-buffer,
+         next-input-buffer,    do-next-input-buffer,
+         \with-input-buffer,
+         input-available-at-source?, do-input-available-at-source?,
+         get-output-buffer,     do-get-output-buffer,
+         release-output-buffer, do-release-output-buffer,
+         next-output-buffer,    do-next-output-buffer,
+         \with-output-buffer,
+         force-output-buffers,  do-force-output-buffers;
 
   // Buffers and buffered streams
   export *multi-buffer-bytes*,
@@ -378,24 +420,6 @@ define module streams-internals
          writable-file-stream-position-setter,
          <general-file-stream>,
          <byte-char-file-stream>;
-
-  // Multi-buffered streams
-  export <buffer-vector>,
-         <multi-buffered-stream>,
-         multi-buffered-stream-position-setter,
-         write-4-aligned-bytes-from-word,
-         read-4-aligned-bytes-as-word,
-         write-4-aligned-bytes, write-8-aligned-bytes,
-         read-4-aligned-bytes, read-8-aligned-bytes,
-         multi-buffer-working-set,
-         multi-buffer-reads,
-         multi-buffer-bytes,
-         multi-buffer-total-working-set,
-         multi-buffer-total-reads,
-         multi-buffer-total-bytes,
-         <general-multi-buffered-stream>,
-         <byte-multi-buffered-stream>,
-         <byte-char-multi-buffered-stream>;
 
   // Sequence streams
   export clear-contents,
@@ -436,5 +460,5 @@ define module streams-internals
          write-fill;
 
   // File accessors
-  create <native-file-accessor>;
+  export <native-file-accessor>;
 end module streams-internals;

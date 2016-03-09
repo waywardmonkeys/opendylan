@@ -33,6 +33,7 @@ Files: library
        io-core/stream
        io-core/buffered-stream
        io-core/external-stream
+       io-core/cleanup-streams
        io-core/file-stream
        io-core/typed-stream
        io-core/unix-standard-io
