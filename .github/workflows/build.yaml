@@ -1,0 +1,27 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Install Boehm GC headers
+        run: sudo apt-get install libgc-dev
+      - name: Install bootstrap compiler
+        run: |
+            curl -LO https://github.com/dylan-lang/opendylan/releases/download/v2020.1.0/opendylan-2020.1-x86_64-linux.tar.bz2
+            tar xvf opendylan-2020.1-x86_64-linux.tar.bz2
+            echo "`pwd`/opendylan-2020.1/bin" >> $GITHUB_PATH
+      - name: Generate configure
+        run: ./autogen.sh
+      - name: Configure
+        run: ./configure
+      - name: Build
+        run: make
